@@ -1,0 +1,10 @@
+{
+  "width": 2000,
+  "height": 2800,
+  "padding": 40,
+  "backgroundColor": "#ffffff",
+  "theme": "default",
+  "fontFamily": "'WenQuanYi Micro Hei', 'WenQuanYi Zen Hei', 'Noto Sans SC', sans-serif",
+  "fontSize": 16,
+  "dpi": 288
+}

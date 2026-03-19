@@ -1,0 +1,16 @@
+{
+  "name": "projects",
+  "version": "1.0.0",
+  "description": "- `projects/` - 所有网页项目目录   - `projects/love-game/` - 土味情话游戏   - `projects/项目名/` - 其他项目",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@emulatorjs/cores": "^4.2.3",
+    "@emulatorjs/emulatorjs": "^4.2.3"
+  }
+}

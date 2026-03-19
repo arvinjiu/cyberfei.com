@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lloyd | 我们的宝贝</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #ff6b9d; --secondary: #c44569; --bg: #fce4ec; --card: #fff; --text: #2c3e50; --accent: #ff4757; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0); 
+            color: var(--text); 
+            min-height: 100vh; 
+            padding: 20px;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--secondary);
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .back-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .lloyd-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .lloyd-title {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+        .lloyd-photo {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(255,105,180,0.5);
+        }
+        .lloyd-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text);
+            text-align: left;
+            padding: 0 15px;
+        }
+        .lloyd-text p {
+            margin-bottom: 15px;
+        }
+        .signature {
+            text-align: center;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+        @keyframes float { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-5px); } 
+        }
+        .lloyd-title {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">⬅️ 返回首页</a>
+    
+    <div class="container">
+        <div class="lloyd-card">
+            <h1 class="lloyd-title">👶 致我们的宝贝 Lloyd</h1>
+            <img class="lloyd-photo" src="./photos/lloyd.jpg" alt="Lloyd">
+            <div class="lloyd-text">
+                <p>亲爱的老婆，一晃眼我们都结婚十年了。十年，3650 天，我们一起走过了人生的春夏秋冬。</p>
+                <p>从当初那个青涩的少年，到现在为人父母的中年大叔，改变的是岁月，不变的是我对你越来越深的爱。</p>
+                <p>谢谢你，这十年来的包容与陪伴。谢谢你把我们的家打理得如此温馨，谢谢你对孩子的悉心教导，谢谢你在每一个我疲惫的夜晚递上的那杯热茶。</p>
+                <p>有人说七年之痒，可我们偏偏走到了十年。我想，大概是因为有你，平淡的日子也能闪闪发光。</p>
+                <p>老婆，十周年快乐。下一个十年，下下个十年，我还要牵着你的手，一起看遍这世间的美好。💕</p>
+                <p class="signature">—— 永远爱你的 飞飞</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

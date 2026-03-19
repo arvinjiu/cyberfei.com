@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fei 的博客</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --card: #1e293b;
+                --text: #f1f5f9;
+                --text-light: #94a3b8;
+                --shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .post-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .post-card:active {
+            transform: scale(0.99);
+        }
+
+        .post-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .post-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+        }
+
+        .post-content {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .post-content p {
+            margin-bottom: 1rem;
+        }
+
+        .post-content code {
+            background: var(--bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+        }
+
+        .post-content pre {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .post-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .write-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .write-btn:active {
+            transform: scale(0.95);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--text-light);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>📝 Fei 的博客</h1>
+        <p>记录生活，分享思考</p>
+    </header>
+
+    <div class="container" id="posts-container">
+        <!-- 帖子会动态加载 -->
+    </div>
+
+    <!-- 写博客弹窗 -->
+    <div class="modal" id="write-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>写新文章</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form id="post-form" onsubmit="submitPost(event)">
+                <div class="form-group">
+                    <label>标题</label>
+                    <input type="text" id="post-title" required placeholder="输入文章标题">
+                </div>
+                <div class="form-group">
+                    <label>内容</label>
+                    <textarea id="post-content" required placeholder="写下你的想法..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">发布</button>
+            </form>
+        </div>
+    </div>
+
+    <button class="write-btn" onclick="openModal()">+</button>
+
+    <script>
+        // 存储键名
+        const STORAGE_KEY = 'fei_blog_posts';
+
+        // 加载帖子
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const container = document.getElementById('posts-container');
+            
+            if (posts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                        </svg>
+                        <p>还没有文章，点击右下角「+」开始写吧！</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = posts.map((post, index) => `
+                <article class="post-card">
+                    <div class="post-date">${formatDate(post.date)}</div>
+                    <h2 class="post-title">${escapeHtml(post.title)}</h2>
+                    <div class="post-content">${parseContent(post.content)}</div>
+                    <button onclick="deletePost(${index})" style="color: #ef4444; background: none; border: none; cursor: pointer; font-size: 0.8rem; margin-top: 0.5rem;">删除</button>
+                </article>
+            `).join('');
+        }
+
+        // 格式化日期
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // 转义 HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 解析内容（简单 Markdown 支持）
+        function parseContent(content) {
+            let html = escapeHtml(content);
+            
+            // 代码块
+            html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+            
+            // 行内代码
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // 粗体
+            html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            
+            // 斜体
+            html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+            
+            // 链接
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color:var(--primary)">$1</a>');
+            
+            // 换行
+            html = html.replace(/\n/g, '<br>');
+            
+            return html;
+        }
+
+        // 打开弹窗
+        function openModal() {
+            document.getElementById('write-modal').classList.add('active');
+            document.getElementById('post-title').focus();
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('write-modal').classList.remove('active');
+            document.getElementById('post-form').reset();
+        }
+
+        // 提交帖子
+        function submitPost(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('post-title').value.trim();
+            const content = document.getElementById('post-content').value.trim();
+            
+            if (!title || !content) return;
+
+            const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            posts.unshift({
+                title,
+                content,
+                date: new Date().toISOString()
+            });
+
+            // 限制存储数量
+            if (posts.length > 50) {
+                posts.pop();
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+            
+            closeModal();
+            loadPosts();
+            
+            // 成功提示
+            alert('✅ 发布成功！');
+        }
+
+        // 删除帖子
+        function deletePost(index) {
+            if (!confirm('确定要删除这篇文章吗？')) return;
+
+            const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            posts.splice(index, 1);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+            loadPosts();
+        }
+
+        // 关闭弹窗点击背景
+        document.getElementById('write-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // 初始化
+        loadPosts();
+
+        // 支持键盘操作
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "skills": {
+    "tavily": {
+      "version": "1.0.0",
+      "installedAt": 1773397896058
+    },
+    "image-ocr": {
+      "version": "1.0.0",
+      "installedAt": 1773507175068
+    }
+  }
+}
