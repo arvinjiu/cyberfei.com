@@ -243,10 +243,13 @@
                 </select>
             </div>
             
-            <!-- 开始游戏按钮 + 全屏按钮 -->
+            <!-- 开始游戏按钮 -->
             <div class="load-btn-container">
-                <button id="load-btn" class="home-btn" style="border: none; cursor: pointer; margin-right: 10px;">▶️ 开始游戏</button>
-                <button id="fullscreen-btn" class="home-btn" style="border: none; cursor: pointer; opacity: 0.5; pointer-events: none;">📺 全屏</button>
+                <button id="load-btn" class="home-btn" style="border: none; cursor: pointer;">▶️ 开始游戏</button>
+            </div>
+            <!-- 移动端横屏提示 -->
+            <div id="mobile-warning" style="display: none; color: #ffcc00; font-size: 0.85rem; margin-top: 8px; text-align: center;">
+                📱 移动端建议横屏
             </div>
         </div>
 
@@ -272,17 +275,8 @@
         const coreSelect = document.getElementById('core-select');
         const romSelect = document.getElementById('rom-select');
         const loadBtn = document.getElementById('load-btn');
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const mobileWarning = document.getElementById('mobile-warning');
         const emulatorDiv = document.getElementById('emulator');
-        const gameContainer = document.querySelector('.game-container');
-        
-        console.log('=== 元素初始化 ===');
-        console.log('coreSelect:', coreSelect);
-        console.log('romSelect:', romSelect);
-        console.log('loadBtn:', loadBtn);
-        console.log('fullscreenBtn:', fullscreenBtn);
-        console.log('emulatorDiv:', emulatorDiv);
-        console.log('gameContainer:', gameContainer);
 
         // 加载 ROM 列表
         async function loadRomList(core) {
@@ -425,57 +419,22 @@
         // 绑定按钮事件
         loadBtn.addEventListener('click', loadGame);
         
-        // 全屏按钮事件
-        if (fullscreenBtn) {
-            fullscreenBtn.addEventListener('click', toggleFullscreen);
-            console.log('全屏按钮事件已绑定');
-        } else {
-            console.error('全屏按钮元素不存在！');
+        // 移动端检测
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
         }
         
-        // 监听游戏加载完成，启用全屏按钮
-        const checkGameLoaded = setInterval(() => {
-            if (document.querySelector('.emulatorjs-container')) {
-                fullscreenBtn.style.opacity = '1';
-                fullscreenBtn.style.pointerEvents = 'auto';
-                clearInterval(checkGameLoaded);
-            }
-        }, 200);
-        
-        // 全屏切换函数
-        function toggleFullscreen() {
-            console.log('全屏按钮被点击，当前 fullscreenElement:', document.fullscreenElement);
-            
-            if (!document.fullscreenElement) {
-                console.log('请求进入全屏...');
-                gameContainer.requestFullscreen().then(() => {
-                    console.log('成功进入全屏');
-                }).catch(err => {
-                    console.error('全屏失败:', err);
-                    alert('全屏失败：' + err.message);
-                });
-            } else {
-                console.log('退出全屏...');
-                document.exitFullscreen();
-            }
+        // 显示移动端提示
+        if (isMobile()) {
+            mobileWarning.style.display = 'block';
         }
         
-        // 监听全屏状态变化，更新按钮文字
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                fullscreenBtn.textContent = '⏹️ 退出全屏';
+        // 监听屏幕方向变化
+        window.addEventListener('resize', () => {
+            if (isMobile()) {
+                mobileWarning.style.display = 'block';
             } else {
-                fullscreenBtn.textContent = '📺 全屏';
-            }
-        });
-        
-        // 键盘快捷键：F 键切换全屏
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'f' || e.key === 'F') {
-                e.preventDefault();
-                if (fullscreenBtn.style.pointerEvents === 'auto') {
-                    toggleFullscreen();
-                }
+                mobileWarning.style.display = 'none';
             }
         });
     </script>
