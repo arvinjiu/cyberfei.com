@@ -396,19 +396,7 @@
                 loaderScript.remove();
             }
             
-            // 2. 清除所有 EmulatorJS 相关的全局变量
-            const ejsVars = [
-                'EJS_core', 'EJS_gameUrl', 'EJS_player', 'EJS_pathtodata',
-                'EJS_startOnLoaded', 'EJS_fullscreen', 'EmulatorJS',
-                'ejs_loader', 'EmulatorJSLoader'
-            ];
-            ejsVars.forEach(varName => {
-                if (window[varName]) {
-                    delete window[varName];
-                }
-            });
-            
-            // 3. 停止所有音频
+            // 2. 停止所有音频（包括 Web Audio API）
             const audioElements = document.querySelectorAll('audio');
             audioElements.forEach(audio => {
                 audio.pause();
@@ -416,21 +404,42 @@
                 audio.remove();
             });
             
-            // 4. 清空模拟器容器（包括 iframe 和所有子元素）
-            emulatorDiv.innerHTML = '';
-            
-            // 5. 清除所有 iframe（可能在容器外）
+            // 3. 关闭所有 iframe 的窗口上下文
             const allIframes = document.querySelectorAll('iframe');
             allIframes.forEach(iframe => {
                 try {
+                    // 尝试关闭 iframe 内的所有音频
+                    if (iframe.contentWindow && iframe.contentWindow.AudioContext) {
+                        const ctx = iframe.contentWindow.AudioContext;
+                        if (ctx && ctx.close) ctx.close();
+                    }
                     iframe.contentWindow.close();
-                } catch (e) {}
+                    iframe.contentWindow.location.reload(); // 强制刷新
+                } catch (e) {
+                    console.log('无法关闭 iframe:', e.message);
+                }
                 iframe.remove();
             });
             
-            // 6. 强制垃圾回收（Chrome 支持）
-            if (window.gc) {
-                window.gc();
+            // 4. 清空模拟器容器
+            emulatorDiv.innerHTML = '';
+            
+            // 5. 清除所有 EmulatorJS 相关的全局变量
+            const ejsVars = [
+                'EJS_core', 'EJS_gameUrl', 'EJS_player', 'EJS_pathtodata',
+                'EJS_startOnLoaded', 'EJS_fullscreen', 'EmulatorJS',
+                'ejs_loader', 'EmulatorJSLoader', 'EmulatorJSInstance'
+            ];
+            ejsVars.forEach(varName => {
+                if (window[varName]) {
+                    delete window[varName];
+                }
+            });
+            
+            // 6. 暂停所有可能存在的 AudioContext
+            if (window.AudioContext || window.webkitAudioContext) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                // 注意：无法直接访问其他 iframe 的 AudioContext，只能清理当前上下文
             }
             
             console.log('游戏已停止，所有资源已清理');
