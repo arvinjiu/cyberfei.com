@@ -145,7 +145,6 @@
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
             position: relative;
             overflow: hidden;
-            height: 280px; /* 固定高度 */
             display: flex;
             align-items: center;
         }
@@ -173,6 +172,89 @@
             line-height: 1.8;
             white-space: pre-wrap;
             animation: content-glow 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .info-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            border: 3px solid var(--cyan);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
+            flex-shrink: 0;
+            animation: avatar-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes avatar-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); }
+        }
+
+        .info-text {
+            flex: 1;
+        }
+
+        /* Life Section */
+        .life-section {
+            margin: 60px 0;
+        }
+
+        .life-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--magenta);
+            border-radius: 15px;
+            padding: 30px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .life-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .life-card.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .life-card:hover {
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.6);
+            transform: translateY(-5px);
+        }
+
+        .life-image {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid var(--magenta);
+            flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .life-content {
+            flex: 1;
+        }
+
+        .life-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--magenta);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--magenta);
+        }
+
+        .life-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--cyan);
+            white-space: pre-wrap;
         }
 
         @keyframes content-glow {
@@ -183,12 +265,31 @@
         /* 移动端适配 */
         @media (max-width: 768px) {
             .info-panel {
-                height: auto;
-                min-height: 200px;
                 padding: 20px;
             }
             .info-content {
                 font-size: 1rem;
+                flex-direction: column;
+                text-align: center;
+            }
+            .info-avatar {
+                width: 100px;
+                height: 100px;
+            }
+            .life-card {
+                flex-direction: column;
+                padding: 20px;
+            }
+            .life-image {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 3/2;
+            }
+            .life-title {
+                font-size: 1.4rem;
+            }
+            .life-text {
+                font-size: 0.9rem;
             }
         }
 
@@ -198,18 +299,35 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 60px;
+            height: auto;
+            min-height: 60px;
             background: var(--glass);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--cyan);
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 10px 20px;
             z-index: 1000;
             transform: translateY(-100%);
             transition: transform 0.3s ease;
             box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .nav-logo {
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+            margin-right: 15px;
+            filter: drop-shadow(0 0 5px var(--cyan));
+            animation: logo-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes logo-glow {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.4)); }
+            50% { filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.8)); }
         }
 
         .nav-menu.active {
@@ -411,8 +529,23 @@
 <body>
     <!-- 横向导航菜单 -->
     <nav class="nav-menu" id="navMenu">
+        <svg class="nav-logo" width="60" height="60" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" stroke="white" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="256" cy="256" r="120"/>
+                <path d="M150 230 Q256 140 370 220" />
+                <path d="M170 260 Q256 210 360 180" />
+                <circle cx="210" cy="260" r="26"/>
+                <circle cx="302" cy="250" r="26"/>
+                <path d="M236 258 L276 252"/>
+                <circle cx="210" cy="260" r="4" fill="white"/>
+                <circle cx="302" cy="250" r="4" fill="white"/>
+                <path d="M210 310 Q256 340 302 305" />
+                <path d="M140 260 L170 260" />
+                <path d="M360 180 L400 160" />
+            </g>
+        </svg>
         <a href="#" class="nav-link">HOME</a>
-        <a href="#" class="nav-link">DEVELOPMENT</a>
+        <a href="#" class="nav-link">PROJECTS</a>
         <a href="#" class="nav-link">LIFE</a>
         <a href="/gaming.html" class="nav-link">GAMING</a>
         <a href="#" class="nav-link">CONTACT</a>
@@ -432,11 +565,14 @@
         </div>
 
         <div class="info-panel">
-            <div class="info-content">Welcome to cyberfei.com! 👋
+            <div class="info-content">
+                <img src="avatar.svg" alt="Avatar" class="info-avatar">
+                <div class="info-text">Welcome to cyberfei.com! 👋
 
 I'm a chubby guy with a big passion for hardware, software, and product design. This is my little corner of the internet where I share the projects I'm tinkering with—from code experiments to gadget builds—and snippets of everyday life. Whether you're here to check out my latest creations or just curious about what I'm up to, make yourself at home. Explore, get inspired, and feel free to reach out!
 
 Happy browsing! 🚀</div>
+            </div>
         </div>
 
         <div class="skills-grid">
@@ -455,6 +591,27 @@ Happy browsing! 🚀</div>
             <div class="skill-card">
                 <div class="skill-icon">🎮</div>
                 <div class="skill-name">GAMING</div>
+            </div>
+        </div>
+
+        <div class="life-section">
+            <h2 class="section-title">🌍 LIFE</h2>
+            <div class="life-card">
+                <img src="osaka.jpg" alt="Osaka" class="life-image">
+                <div class="life-content">
+                    <h2 class="life-title">🌸 Osaka, Japan</h2>
+                    <div class="life-text">First impressions of Osaka hit you all at once—a vibrant collision of sights, sounds, and smells. The energy is palpable the moment you step out of Umeda Station. It's a city that feels less polished than Tokyo, wearing its soul on its sleeve with a certain gritty pride. You notice it in the dazzling, chaotic river of neon that floods the Dōtonbori canal at night, reflecting off the water in a million shimmering fragments. 
+There's a distinct lack of pretense here. People move with a purpose, but there's laughter—loud, unguarded laughter—echoing from izakayas. You see it in the giant, three-dimensional mechanical crabs and dragon signs that seem to burst from building facades, a testament to the city's unapologetic love for spectacle. It feels real, immediate, and utterly unforgettable from the very first glance.</div>
+                </div>
+            </div>
+            <div class="life-card reverse">
+                <img src="erbing.jpg" alt="Erbing" class="life-image">
+                <div class="life-content">
+                    <h2 class="life-title">🐱 Erbing, Shanghai</h2>
+                    <div class="life-text">If you ever visit my home, the first thing you'll likely see is a lazy, orange-colored cloud parked directly in the middle of the hallway. That cloud is Erbing, my three-year-old Garfield cat. Named with the Chinese character for "two" and "cake"—a nod to his round, flat face—Erbing is the absolute monarch of this household, ruling from his plush throne (which is usually just the sunniest spot on the carpet).
+
+Weighing in at a solid twelve pounds, Erbing is gloriously, unapologetically fat. When he walks, his low-slung belly sways gently from side to side, and his cheeks are so full they look like two small steamed buns permanently stuck to the sides of his head. His favorite hobby is sleeping in positions that defy the laws of physics, often with his head dangling off the edge of the cat tree and his paws twitching as he dreams of chasing the treats he'll demand as soon as he wakes up.</div>
+                </div>
             </div>
         </div>
 
