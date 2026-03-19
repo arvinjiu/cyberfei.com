@@ -246,7 +246,7 @@
             <!-- 开始游戏按钮 + 全屏按钮 -->
             <div class="load-btn-container">
                 <button id="load-btn" class="home-btn" style="border: none; cursor: pointer; margin-right: 10px;">▶️ 开始游戏</button>
-                <button id="fullscreen-btn" class="home-btn" style="border: none; cursor: pointer; display: none;">📺 全屏</button>
+                <button id="fullscreen-btn" class="home-btn" style="border: none; cursor: pointer; opacity: 0.5; pointer-events: none;">📺 全屏</button>
             </div>
         </div>
 
@@ -400,10 +400,11 @@
         // 全屏按钮事件
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
-        // 监听游戏加载完成，显示全屏按钮
+        // 监听游戏加载完成，启用全屏按钮
         const checkGameLoaded = setInterval(() => {
             if (document.querySelector('.emulatorjs-container')) {
-                fullscreenBtn.style.display = 'inline-block';
+                fullscreenBtn.style.opacity = '1';
+                fullscreenBtn.style.pointerEvents = 'auto';
                 clearInterval(checkGameLoaded);
             }
         }, 200);
@@ -433,7 +434,7 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'f' || e.key === 'F') {
                 e.preventDefault();
-                if (fullscreenBtn.style.display !== 'none') {
+                if (fullscreenBtn.style.pointerEvents === 'auto') {
                     toggleFullscreen();
                 }
             }
