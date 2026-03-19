@@ -145,6 +145,120 @@
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
             position: relative;
             overflow: hidden;
+            height: 280px; /* 固定高度 */
+            display: flex;
+            align-items: center;
+        }
+
+        .info-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            animation: panel-rotate 20s linear infinite;
+        }
+
+        @keyframes panel-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-content {
+            position: relative;
+            z-index: 1;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            animation: content-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes content-glow {
+            0%, 100% { text-shadow: 0 0 5px rgba(0, 212, 255, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(0, 212, 255, 0.6); }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .info-panel {
+                height: auto;
+                min-height: 200px;
+                padding: 20px;
+            }
+            .info-content {
+                font-size: 1rem;
+            }
+        }
+
+        /* 横向导航菜单 */
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--cyan);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .nav-menu.active {
+            transform: translateY(0);
+        }
+
+        .nav-menu::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            animation: panel-rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        .nav-link {
+            color: var(--cyan);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 10px;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--magenta);
+            text-shadow: 0 0 10px var(--magenta);
+        }
+
+        .nav-link:hover::before {
+            width: 80%;
         }
 
         .info-panel::before {
@@ -160,11 +274,7 @@
             opacity: 0.5;
         }
 
-        .typing {
-            font-size: 1.1rem;
-            line-height: 2;
-            min-height: 100px;
-        }
+        
 
         .skills-grid {
             display: grid;
@@ -299,6 +409,15 @@
     </style>
 </head>
 <body>
+    <!-- 横向导航菜单 -->
+    <nav class="nav-menu" id="navMenu">
+        <a href="#" class="nav-link">HOME</a>
+        <a href="#" class="nav-link">DEVELOPMENT</a>
+        <a href="#" class="nav-link">LIFE</a>
+        <a href="/gaming.html" class="nav-link">GAMING</a>
+        <a href="#" class="nav-link">CONTACT</a>
+    </nav>
+
     <div class="grid-bg"></div>
     <canvas id="particles"></canvas>
 
@@ -313,7 +432,11 @@
         </div>
 
         <div class="info-panel">
-            <div class="typing" id="typing"></div>
+            <div class="info-content">Welcome to cyberfei.com! 👋
+
+I'm a chubby guy with a big passion for hardware, software, and product design. This is my little corner of the internet where I share the projects I'm tinkering with—from code experiments to gadget builds—and snippets of everyday life. Whether you're here to check out my latest creations or just curious about what I'm up to, make yourself at home. Explore, get inspired, and feel free to reach out!
+
+Happy browsing! 🚀</div>
         </div>
 
         <div class="skills-grid">
@@ -364,25 +487,40 @@
     </div>
 
     <script>
+        // 更新时间
         function updateTime() {
-            const now = new Date();
-            document.getElementById('time').textContent = now.toISOString().replace('T', ' ').slice(0, 19);
+            const now = new Date().toLocaleString('zh-CN', {
+                timeZone: 'Asia/Shanghai',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            document.getElementById('time').textContent = now.replace(/\//g, '-');
         }
         setInterval(updateTime, 1000);
         updateTime();
 
-        const text = `欢迎来到飞飞的赛博世界 🌐\n我是 Fei Liu，一个热爱技术的赛博游民。\n在这里，你将探索我的项目、想法和数字足迹。\n\n[权限已验证] [访问级别：访客]`;
-        const typingElement = document.getElementById('typing');
-        let index = 0;
-
-        function typeWriter() {
-            if (index < text.length) {
-                typingElement.innerHTML += text.charAt(index) === '\n' ? '<br>' : text.charAt(index);
-                index++;
-                setTimeout(typeWriter, 50);
+        // 导航菜单滚动监听
+        const infoPanel = document.querySelector('.info-panel');
+        const navMenu = document.getElementById('navMenu');
+        
+        window.addEventListener('scroll', () => {
+            const panelBottom = infoPanel.getBoundingClientRect().bottom;
+            const windowHeight = window.innerHeight;
+            
+            // 当 info-panel 底部到达页面顶部时显示菜单
+            if (panelBottom <= 0) {
+                navMenu.classList.add('active');
+            } else {
+                navMenu.classList.remove('active');
             }
-        }
-        setTimeout(typeWriter, 1000);
+        });
+
+        
 
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
