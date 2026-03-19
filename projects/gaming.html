@@ -411,12 +411,18 @@
         
         // 全屏切换函数
         function toggleFullscreen() {
+            console.log('全屏按钮被点击，当前 fullscreenElement:', document.fullscreenElement);
+            
             if (!document.fullscreenElement) {
-                gameContainer.requestFullscreen().catch(err => {
+                console.log('请求进入全屏...');
+                gameContainer.requestFullscreen().then(() => {
+                    console.log('成功进入全屏');
+                }).catch(err => {
                     console.error('全屏失败:', err);
                     alert('全屏失败：' + err.message);
                 });
             } else {
+                console.log('退出全屏...');
                 document.exitFullscreen();
             }
         }
