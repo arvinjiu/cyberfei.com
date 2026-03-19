@@ -390,28 +390,50 @@
         function stopGame() {
             console.log('停止当前游戏...');
             
-            // 移除 loader 脚本
+            // 1. 移除 loader 脚本
             const loaderScript = document.getElementById('ejs-loader');
             if (loaderScript) {
                 loaderScript.remove();
             }
             
-            // 清空模拟器容器
+            // 2. 清除所有 EmulatorJS 相关的全局变量
+            const ejsVars = [
+                'EJS_core', 'EJS_gameUrl', 'EJS_player', 'EJS_pathtodata',
+                'EJS_startOnLoaded', 'EJS_fullscreen', 'EmulatorJS',
+                'ejs_loader', 'EmulatorJSLoader'
+            ];
+            ejsVars.forEach(varName => {
+                if (window[varName]) {
+                    delete window[varName];
+                }
+            });
+            
+            // 3. 停止所有音频
+            const audioElements = document.querySelectorAll('audio');
+            audioElements.forEach(audio => {
+                audio.pause();
+                audio.src = '';
+                audio.remove();
+            });
+            
+            // 4. 清空模拟器容器（包括 iframe 和所有子元素）
             emulatorDiv.innerHTML = '';
             
-            // 清除所有 EmulatorJS 相关的全局变量
-            delete window.EJS_core;
-            delete window.EJS_gameUrl;
-            delete window.EJS_player;
-            delete window.EJS_pathtodata;
-            delete window.EJS_startOnLoaded;
-            delete window.EJS_fullscreen;
+            // 5. 清除所有 iframe（可能在容器外）
+            const allIframes = document.querySelectorAll('iframe');
+            allIframes.forEach(iframe => {
+                try {
+                    iframe.contentWindow.close();
+                } catch (e) {}
+                iframe.remove();
+            });
             
-            // 清除所有 iframe（EmulatorJS 创建的）
-            const iframes = emulatorDiv.querySelectorAll('iframe');
-            iframes.forEach(iframe => iframe.remove());
+            // 6. 强制垃圾回收（Chrome 支持）
+            if (window.gc) {
+                window.gc();
+            }
             
-            console.log('游戏已停止');
+            console.log('游戏已停止，所有资源已清理');
         }
         
         // 加载游戏函数
