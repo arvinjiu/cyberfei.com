@@ -6,6 +6,10 @@
  <title>Gaming - 复古游戏机</title>
  <style>
  * { margin: 0; padding: 0; box-sizing: border-box; }
+ html, body {
+ height: 100%;
+ background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+ }
  :root { 
  --primary: #00d4ff; 
  --secondary: #a855f7; 
@@ -17,7 +21,6 @@
  }
  body { 
  font-family: 'Courier New', 'Fira Code', monospace; 
- background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%); 
  color: var(--text); 
  min-height: 100vh; 
  display: flex; 
@@ -103,11 +106,14 @@
  border: 1px solid rgba(0, 212, 255, 0.3);
  box-shadow: var(--glow);
  }
- /* 移动端横屏提示 */
+ /* 移动端横屏提示 - 竖向居中 */
 .landscape-warning {
  display: none;
  position: fixed;
- top: 0; left: 0; right: 0;
+ top: 50%;
+ left: 0;
+ right: 0;
+ transform: translateY(-50%);
  background: linear-gradient(45deg, #ef4444, #f59e0b);
  color: white;
  text-align: center;
@@ -125,19 +131,17 @@
   display: block;
  }
 }
- .selector-group {
+ /* 单个选择器组：标签和选择器左对齐 */
+.selector-group {
  display: flex;
+ align-items: center;
  gap: 10px;
- margin-bottom: 20px;
- flex-wrap: wrap;
- justify-content: center;
+ margin-bottom: 10px;
  }
  .selector-group label {
  color: var(--accent);
  font-size: 0.9rem;
- display: flex;
- align-items: center;
- gap: 5px;
+ white-space: nowrap; /* 防止换行 */
  }
  .selector-group select {
  background: rgba(0, 0, 0, 0.5);
@@ -149,6 +153,9 @@
  font-size: 0.9rem;
  cursor: pointer;
  transition: all 0.3s ease;
+ min-width: 200px; /* 固定最小宽度，防止拉伸 */
+ max-width: 300px; /* 限制最大宽度 */
+ width: 100%; /* 自适应但不超过 max-width */
  }
  .selector-group select:disabled {
  opacity: 0.5;
@@ -205,6 +212,7 @@
  </div>
  
  <!-- 模拟器选择：默认显示请选择 -->
+ <div style="text-align: center; margin-top: 30px;">
  <div class="selector-group">
  <label>🕹️ 模拟器:</label>
  <select id="core-select">
@@ -218,6 +226,7 @@
  <option value="ppsspp">PSP</option>
  <option value="fbneo">街机</option>
  </select>
+ </select>
  </div>
  
  <!-- ROM 选择：默认禁用，显示请先选择模拟器 -->
@@ -226,6 +235,7 @@
  <select id="rom-select" disabled>
  <option value="" selected disabled>请先选择模拟器</option>
  </select>
+ </div>
  </div>
  
  <div class="selector-group" style="justify-content: center; gap: 15px;">
@@ -269,8 +279,9 @@
  }
  
  try {
- // 显示加载中状态（保持禁用）
- romSelect.innerHTML = '<option value="" selected disabled>正在加载 ROM 列表...</option>';
+ // 直接清空选项，不显示加载中提示
+ romSelect.disabled = true;
+ romSelect.innerHTML = '';
  
  const response = await fetch(romDir + '?t=' + Date.now());
  const text = await response.text();
@@ -280,13 +291,20 @@
  const doc = parser.parseFromString(text, 'text/html');
  const links = doc.querySelectorAll('a');
  
- // 清空并添加默认选项（加载完成后显示）
- romSelect.innerHTML = '<option value="" selected disabled>请选择 ROM</option>';
+ // 添加默认选项
+ romSelect.innerHTML = '<option value="" selected disabled>请选择</option>';
  
  let hasRom = false;
  links.forEach(link => {
  const filename = link.textContent.trim();
- if (filename && !filename.startsWith('.') && !filename.endsWith('/')) {
+ // 过滤：非隐藏文件、非目录、且是有效 ROM 文件
+ if (filename && 
+ !filename.startsWith('.') && 
+ !filename.endsWith('/') &&
+ (filename.endsWith('.nes') || filename.endsWith('.sfc') || filename.endsWith('.smc') || 
+ filename.endsWith('.gba') || filename.endsWith('.gb') || filename.endsWith('.gbc') ||
+ filename.endsWith('.gen') || filename.endsWith('.md') || filename.endsWith('.iso') ||
+ filename.endsWith('.pbp') || filename.endsWith('.zip'))) {
  const option = document.createElement('option');
  option.value = romDir + filename;
  option.textContent = filename;
@@ -314,10 +332,7 @@
  coreSelect.addEventListener('change', function() {
  const core = this.value;
  if (core) {
- // 先禁用并清空，防止闪烁
- romSelect.disabled = true;
- romSelect.innerHTML = '<option value="" selected disabled>正在加载 ROM 列表...</option>';
- // 再加载新列表
+ // 直接调用 loadRomList，让它自己管理状态
  loadRomList(core);
  } else {
  // 如果选择回退到占位项（理论上不会，因为占位项不可选），但以防万一
