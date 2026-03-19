@@ -294,6 +294,20 @@
                 return;
             }
             
+            // ROM 文件后缀映射
+            const romExtensions = {
+                "fceumm": [".nes"],
+                "snes9x": [".sfc", ".smc", ".fig"],
+                "mgba": [".gba"],
+                "gambatte": [".gb", ".gbc"],
+                "genesis_plus_gx": [".gen", ".md", ".smd"],
+                "pcsx_rearmed": [".iso", ".bin", ".cue", ".pbp"],
+                "ppsspp": [".iso", ".pbp"],
+                "fbneo": [".zip", ".7z"]
+            };
+            
+            const validExts = romExtensions[core] || [];
+            
             try {
                 // 显示加载中状态
                 romSelect.innerHTML = '<option value="" selected disabled>正在加载 ROM 列表...</option>';
@@ -313,7 +327,13 @@
                 let hasRom = false;
                 links.forEach(link => {
                     const filename = link.textContent.trim();
-                    if (filename && !filename.startsWith('.') && !filename.endsWith('/')) {
+                    
+                    // 过滤条件：非空、不是隐藏文件、不是目录、有有效的 ROM 后缀
+                    if (filename && 
+                        !filename.startsWith('.') && 
+                        !filename.endsWith('/') &&
+                        validExts.some(ext => filename.toLowerCase().endsWith(ext))) {
+                        
                         const option = document.createElement('option');
                         option.value = romDir + filename;
                         option.textContent = filename;
