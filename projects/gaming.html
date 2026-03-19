@@ -275,6 +275,15 @@
         const fullscreenBtn = document.getElementById('fullscreen-btn');
         const emulatorDiv = document.getElementById('emulator');
         const gameContainer = document.querySelector('.game-container');
+        
+        console.log('元素初始化:', {
+            coreSelect,
+            romSelect,
+            loadBtn,
+            fullscreenBtn,
+            emulatorDiv,
+            gameContainer
+        });
 
         // 加载 ROM 列表
         async function loadRomList(core) {
@@ -398,7 +407,12 @@
         loadBtn.addEventListener('click', loadGame);
         
         // 全屏按钮事件
-        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+            console.log('全屏按钮事件已绑定');
+        } else {
+            console.error('全屏按钮元素不存在！');
+        }
         
         // 监听游戏加载完成，启用全屏按钮
         const checkGameLoaded = setInterval(() => {
