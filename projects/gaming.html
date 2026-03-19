@@ -378,10 +378,12 @@
                 if (document.getElementById('ejs-loader') || emulatorDiv.querySelector('iframe')) {
                     console.log('ROM 切换，停止当前游戏并加载新的...');
                     stopGame();
-                    // 延迟加载，确保旧游戏完全停止
+                    // 延迟加载，确保旧游戏完全停止（包括音频）
                     setTimeout(() => {
+                        // 再次确保容器为空
+                        emulatorDiv.innerHTML = '';
                         loadGame();
-                    }, 100);
+                    }, 200);
                 }
             }
         });
