@@ -276,14 +276,13 @@
         const emulatorDiv = document.getElementById('emulator');
         const gameContainer = document.querySelector('.game-container');
         
-        console.log('元素初始化:', {
-            coreSelect,
-            romSelect,
-            loadBtn,
-            fullscreenBtn,
-            emulatorDiv,
-            gameContainer
-        });
+        console.log('=== 元素初始化 ===');
+        console.log('coreSelect:', coreSelect);
+        console.log('romSelect:', romSelect);
+        console.log('loadBtn:', loadBtn);
+        console.log('fullscreenBtn:', fullscreenBtn);
+        console.log('emulatorDiv:', emulatorDiv);
+        console.log('gameContainer:', gameContainer);
 
         // 加载 ROM 列表
         async function loadRomList(core) {
