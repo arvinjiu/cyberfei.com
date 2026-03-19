@@ -3,281 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaming - 复古游戏机</title>
+    <title>🎮 游戏模拟器</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { 
-            --primary: #00d4ff; 
-            --secondary: #a855f7; 
-            --bg: #0a0a0f; 
-            --card: rgba(20, 20, 35, 0.9); 
-            --text: #e0e0e0; 
-            --accent: #06b6d4;
-            --glow: 0 0 20px rgba(0, 212, 255, 0.5);
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffe66d;
+            --dark: #1a1a2e;
+            --light: #f7f7f7;
+            --glow: 0 0 20px rgba(255, 107, 107, 0.5);
         }
-        html, body {
-            background-color: #0a0a0f;
+        
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        body { 
-            font-family: 'Courier New', 'Fira Code', monospace; 
-            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%); 
-            color: var(--text); 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 10px;
-            overflow-x: hidden;
-            position: relative;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
         }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-                radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.9), transparent),
-                radial-gradient(1px 1px at 230px 80px, #fff, transparent);
-            background-size: 350px 350px;
-            animation: stars 20s linear infinite;
-            opacity: 0.6;
-            z-index: -1;
-        }
-        @keyframes stars {
-            from { transform: translateY(0); }
-            to { transform: translateY(-350px); }
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.1),
-                rgba(0, 0, 0, 0.1) 1px,
-                transparent 1px,
-                transparent 2px
-            );
-            pointer-events: none;
-            z-index: 999;
-        }
+        
         .container {
+            max-width: 800px;
             width: 100%;
-            max-width: 100%;
-            padding: 10px 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
-        .home-btn {
-            display: inline-block;
-            padding: 8px 16px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-            width: auto;
-            font-size: 0.85rem;
-        }
-        .home-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--glow);
-        }
-        .game-container {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            box-shadow: var(--glow);
-            width: 100%;
-            max-width: 100%;
-        }
-        #emulator {
-            width: 100%;
-            min-height: 400px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            margin-bottom: 15px;
-        }
-        .status-message {
+        
+        h1 {
             text-align: center;
-            color: var(--accent);
-            font-size: 1.1rem;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
         }
+        
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px var(--primary)); }
+            to { filter: drop-shadow(0 0 20px var(--secondary)); }
+        }
+        
         .selector-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
+            margin-bottom: 20px;
         }
-        .selector-group label {
-            color: var(--accent);
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
         }
-        .selector-group select {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--primary);
-            color: var(--text);
-            padding: 6px 12px;
-            border-radius: 5px;
-            font-family: inherit;
-            font-size: 0.85rem;
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            flex: 1;
-            min-width: 120px;
-            max-width: 300px;
         }
-        .selector-group select:disabled {
+        
+        select:hover, select:focus {
+            border-color: var(--secondary);
+            box-shadow: var(--glow);
+            outline: none;
+        }
+        
+        select:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            border-color: #666;
         }
-        .selector-group select:hover:not(:disabled) {
-            border-color: var(--secondary);
-            box-shadow: var(--glow);
-        }
-        .selector-group select:focus {
-            outline: none;
-            border-color: var(--secondary);
-            box-shadow: var(--glow);
-        }
+        
         .load-btn-container {
-            display: flex;
-            justify-content: center;
-            margin: 10px 0 15px;
+            text-align: center;
+            margin-top: 25px;
         }
+        
         .load-btn-container button {
-            padding: 8px 32px;
-            font-size: 0.85rem;
+            padding: 12px 40px;
+            font-size: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
+        
         .load-btn-container button:hover {
             transform: translateY(-2px);
             box-shadow: var(--glow);
         }
-        /* 调整虚拟按键位置，避免遮挡屏幕 */
-        .emulatorjs-container .ejs-controls {
-            top: auto !important;
-            bottom: 10px !important;
+        
+        .load-btn-container button:active {
+            transform: translateY(0);
         }
-        .emulatorjs-container .ejs-controls button {
-            width: 50px !important;
-            height: 50px !important;
-            opacity: 0.6 !important;
+        
+        .game-container {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
-        footer {
-            margin-top: 20px;
+        
+        .status-message {
             text-align: center;
-            color: var(--accent);
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+        
+        #emulator {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--secondary);
             font-size: 0.9rem;
         }
-        @media (max-width: 768px) {
+        
+        @media (max-width: 600px) {
             .container {
-                padding: 5px;
+                padding: 20px;
             }
-            .game-container {
-                padding: 12px 8px;
-            }
-            .home-btn {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-                margin-bottom: 8px;
-            }
-            .selector-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .selector-group select {
-                max-width: 100%;
-            }
-            #emulator {
-                min-height: 250px;
+            
+            h1 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="/" class="home-btn">← 返回首页</a>
+        <h1>🎮 游戏模拟器</h1>
+        
+        <div class="selector-group">
+            <label>🎯 选择模拟器:</label>
+            <select id="core-select">
+                <option value="" selected disabled>请选择模拟器</option>
+                <option value="fceumm">FC/NES</option>
+                <option value="snes9x">SFC/SNES</option>
+                <option value="mgba">GBA</option>
+                <option value="gambatte">GB/GBC</option>
+                <option value="genesis_plus_gx">Sega Genesis</option>
+                <option value="pcsx_rearmed">PS1</option>
+                <option value="ppsspp">PSP</option>
+                <option value="fbneo">街机</option>
+            </select>
+        </div>
+        
+        <div class="selector-group">
+            <label>🎮 ROM 选择:</label>
+            <select id="rom-select" disabled>
+                <option value="" selected disabled>请先选择模拟器</option>
+            </select>
+        </div>
+        
+        <div class="load-btn-container">
+            <button id="load-btn" style="margin-right: 10px;">▶️ 开始游戏</button>
+            <button id="switch-game-btn">🔄 切换游戏</button>
+        </div>
+        
+        <div id="mobile-warning" style="display: none; color: #ffcc00; font-size: 0.85rem; margin-top: 8px; text-align: center;">
+            📱 移动端建议横屏
+        </div>
         
         <div class="game-container">
-            <!-- Emulator 在最上方 -->
             <div id="emulator">
-                <div class="status-message">选择游戏后点击"开始游戏" 🎮</div>
-            </div>
-            
-            <!-- 模拟器选择 -->
-            <div class="selector-group">
-                <label>🕹️ 模拟器:</label>
-                <select id="core-select">
-                    <option value="" selected disabled>请选择模拟器</option>
-                    <option value="fceumm">FC (红白机)</option>
-                    <option value="snes9x">SNES (超任)</option>
-                    <option value="mgba">GBA</option>
-                    <option value="gambatte">GB</option>
-                    <option value="genesis_plus_gx">Sega Genesis</option>
-                    <option value="pcsx_rearmed">PS1</option>
-                    <option value="ppsspp">PSP</option>
-                    <option value="fbneo">街机</option>
-                </select>
-            </div>
-            
-            <!-- ROM 选择 -->
-            <div class="selector-group">
-                <label>🎮 ROM 选择:</label>
-                <select id="rom-select" disabled>
-                    <option value="" selected disabled>请先选择模拟器</option>
-                </select>
-            </div>
-            
-            <!-- 开始游戏按钮 -->
-            <div class="load-btn-container">
-                <button id="load-btn" class="home-btn" style="border: none; cursor: pointer;">▶️ 开始游戏</button>
-            </div>
-            <!-- 移动端横屏提示 -->
-            <div id="mobile-warning" style="display: none; color: #ffcc00; font-size: 0.85rem; margin-top: 8px; text-align: center;">
-                📱 移动端建议横屏
+                <div class="status-message">选择模拟器和 ROM 后点击开始游戏</div>
             </div>
         </div>
-
-        <footer>
-            <p>Made with ❤️ by 飞飞</p>
-        </footer>
     </div>
+    
+    <footer>
+        <p>Made with ❤️ by 飞飞</p>
+    </footer>
 
     <script>
         // ROM 目录映射
         const coreToRomDir = {
-            "fceumm": "emulatorjs/roms/fceumm/",
-            "snes9x": "emulatorjs/roms/snes9x/",
-            "mgba": "emulatorjs/roms/mgba/",
-            "gambatte": "emulatorjs/roms/gambatte/",
-            "genesis_plus_gx": "emulatorjs/roms/genesis_plus_gx/",
-            "pcsx_rearmed": "emulatorjs/roms/pcsx_rearmed/",
-            "ppsspp": "emulatorjs/roms/ppsspp/",
-            "fbneo": "emulatorjs/roms/fbneo/"
+            "fceumm": "http://cyberfei.com:8082/emulatorjs/roms/fceumm/",
+            "snes9x": "http://cyberfei.com:8082/emulatorjs/roms/snes9x/",
+            "mgba": "http://cyberfei.com:8082/emulatorjs/roms/mgba/",
+            "gambatte": "http://cyberfei.com:8082/emulatorjs/roms/gambatte/",
+            "genesis_plus_gx": "http://cyberfei.com:8082/emulatorjs/roms/genesis_plus_gx/",
+            "pcsx_rearmed": "http://cyberfei.com:8082/emulatorjs/roms/pcsx_rearmed/",
+            "ppsspp": "http://cyberfei.com:8082/emulatorjs/roms/ppsspp/",
+            "fbneo": "http://cyberfei.com:8082/emulatorjs/roms/fbneo/"
+        };
+        
+        // ROM 文件后缀映射
+        const romExtensions = {
+            "fceumm": [".nes"],
+            "snes9x": [".sfc", ".smc", ".fig"],
+            "mgba": [".gba"],
+            "gambatte": [".gb", ".gbc"],
+            "genesis_plus_gx": [".gen", ".md", ".smd"],
+            "pcsx_rearmed": [".iso", ".bin", ".cue", ".pbp"],
+            "ppsspp": [".iso", ".pbp"],
+            "fbneo": [".zip", ".7z"]
         };
         
         // 获取元素
         const coreSelect = document.getElementById('core-select');
         const romSelect = document.getElementById('rom-select');
         const loadBtn = document.getElementById('load-btn');
+        const switchGameBtn = document.getElementById('switch-game-btn');
         const mobileWarning = document.getElementById('mobile-warning');
         const emulatorDiv = document.getElementById('emulator');
-
+        
         // 加载 ROM 列表
         async function loadRomList(core) {
             const romDir = coreToRomDir[core];
@@ -288,41 +250,25 @@
                 return;
             }
             
-            // ROM 文件后缀映射
-            const romExtensions = {
-                "fceumm": [".nes"],
-                "snes9x": [".sfc", ".smc", ".fig"],
-                "mgba": [".gba"],
-                "gambatte": [".gb", ".gbc"],
-                "genesis_plus_gx": [".gen", ".md", ".smd"],
-                "pcsx_rearmed": [".iso", ".bin", ".cue", ".pbp"],
-                "ppsspp": [".iso", ".pbp"],
-                "fbneo": [".zip", ".7z"]
-            };
-            
             const validExts = romExtensions[core] || [];
             
             try {
-                // 显示加载中状态
                 romSelect.innerHTML = '<option value="" selected disabled>正在加载 ROM 列表...</option>';
-                romSelect.disabled = true; // 加载期间禁用
+                romSelect.disabled = true;
                 
                 const response = await fetch(romDir + '?t=' + Date.now());
                 const text = await response.text();
                 
-                // 简单解析 HTML 目录列表
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, 'text/html');
                 const links = doc.querySelectorAll('a');
                 
-                // 清空并添加默认选项
                 romSelect.innerHTML = '<option value="" selected disabled>请选择 ROM</option>';
                 
                 let hasRom = false;
                 links.forEach(link => {
                     const filename = link.textContent.trim();
                     
-                    // 过滤条件：非空、不是隐藏文件、不是目录、有有效的 ROM 后缀
                     if (filename && 
                         !filename.startsWith('.') && 
                         !filename.endsWith('/') &&
@@ -340,7 +286,7 @@
                     romSelect.innerHTML = '<option value="" selected disabled>暂无 ROM 文件</option>';
                     romSelect.disabled = true;
                 } else {
-                    romSelect.disabled = false; // 加载完成启用
+                    romSelect.disabled = false;
                 }
                 
             } catch (error) {
@@ -354,121 +300,19 @@
         coreSelect.addEventListener('change', function() {
             const core = this.value;
             if (core) {
-                // 如果游戏正在运行，先停止
-                if (document.getElementById('ejs-loader') || emulatorDiv.querySelector('iframe')) {
-                    console.log('核心切换，停止当前游戏...');
-                    stopGame();
-                }
-                
-                // 启用 ROM 选择（实际在 loadRomList 中会根据结果再次设置 disabled）
                 romSelect.disabled = false;
                 loadRomList(core);
             } else {
-                // 如果选择回退到占位项（理论上不会，因为占位项不可选），但以防万一
                 romSelect.innerHTML = '<option value="" selected disabled>请先选择模拟器</option>';
                 romSelect.disabled = true;
             }
         });
-        
-        // ROM 选择变化时
-        romSelect.addEventListener('change', function() {
-            const rom = this.value;
-            if (rom) {
-                // 如果游戏正在运行，停止并加载新的
-                if (document.getElementById('ejs-loader') || emulatorDiv.querySelector('iframe') || document.querySelectorAll('iframe').length > 0) {
-                    console.log('ROM 切换，检测到游戏正在运行，强制停止...');
-                    stopGame();
-                    // 更长的延迟，确保所有资源完全释放
-                    setTimeout(() => {
-                        console.log('准备加载新 ROM...');
-                        // 再次检查并清空
-                        emulatorDiv.innerHTML = '';
-                        const remainingIframes = document.querySelectorAll('iframe');
-                        remainingIframes.forEach(iframe => iframe.remove());
-                        loadGame();
-                    }, 500);
-                }
-            }
-        });
-        
-        // 停止游戏函数
-        function stopGame() {
-            console.log('=== 开始停止游戏 ===');
-            
-            // 1. 移除 loader 脚本
-            const loaderScript = document.getElementById('ejs-loader');
-            if (loaderScript) {
-                console.log('移除 loader 脚本');
-                loaderScript.remove();
-            }
-            
-            // 2. 找到所有 iframe 并强制销毁
-            const allIframes = document.querySelectorAll('iframe');
-            console.log('找到 iframe 数量:', allIframes.length);
-            
-            allIframes.forEach((iframe, index) => {
-                console.log(`销毁 iframe ${index}:`, iframe.src || '无 src');
-                
-                // 尝试多种方法关闭 iframe
-                try {
-                    // 方法 1: 设置 src 为空白
-                    iframe.src = 'about:blank';
-                    
-                    // 方法 2: 尝试访问内部并关闭
-                    if (iframe.contentWindow) {
-                        iframe.contentWindow.stop && iframe.contentWindow.stop();
-                        iframe.contentWindow.location && iframe.contentWindow.location.replace('about:blank');
-                    }
-                    
-                    // 方法 3: 移除 iframe
-                    iframe.remove();
-                } catch (e) {
-                    console.error('销毁 iframe 失败:', e.message);
-                    try {
-                        iframe.remove();
-                    } catch (e2) {
-                        console.error('强制移除失败:', e2.message);
-                    }
-                }
-            });
-            
-            // 3. 清空模拟器容器
-            console.log('清空模拟器容器');
-            emulatorDiv.innerHTML = '';
-            
-            // 4. 清除所有 EmulatorJS 相关的全局变量
-            const ejsVars = [
-                'EJS_core', 'EJS_gameUrl', 'EJS_player', 'EJS_pathtodata',
-                'EJS_startOnLoaded', 'EJS_fullscreen', 'EmulatorJS',
-                'ejs_loader', 'EmulatorJSLoader', 'EmulatorJSInstance',
-                'EmulatorJSConfig', 'EmulatorJSPromise'
-            ];
-            ejsVars.forEach(varName => {
-                if (window[varName]) {
-                    console.log(`删除全局变量: ${varName}`);
-                    delete window[varName];
-                }
-            });
-            
-            // 5. 强制停止所有 audio 元素
-            const audioElements = document.querySelectorAll('audio');
-            audioElements.forEach(audio => {
-                audio.pause();
-                audio.currentTime = 0;
-                audio.src = '';
-                audio.load();
-                audio.remove();
-            });
-            
-            console.log('=== 游戏停止完成 ===');
-        }
         
         // 加载游戏函数
         function loadGame() {
             const core = coreSelect.value;
             const rom = romSelect.value;
             
-            // 验证选择
             if (!core) {
                 alert('请先选择模拟器 🎮');
                 return;
@@ -484,50 +328,73 @@
                 stopGame();
             }
             
-            // 设置 EmulatorJS 配置变量（自动启动）
             window.EJS_core = core;
             window.EJS_gameUrl = rom;
             window.EJS_player = "#emulator";
             window.EJS_pathtodata = "http://cyberfei.com:8082/emulatorjs/data/";
-            // 让模拟器加载完成后自动启动（默认就是 true）
             window.EJS_startOnLoaded = true;
             window.EJS_fullscreen = false;
             
-            // 清空容器显示加载中
             emulatorDiv.innerHTML = '<div class="status-message">⏳ 正在启动模拟器...</div>';
             
-            // 动态创建 loader 脚本
             const script = document.createElement('script');
             script.id = 'ejs-loader';
             script.src = 'http://cyberfei.com:8082/emulatorjs/data/loader.js';
             script.onload = function() {
                 console.log('EmulatorJS loaded successfully, game will auto-start');
-                // 可以在这里显示额外信息，但不需要手动调用 start
             };
             script.onerror = function() {
                 console.error('Failed to load EmulatorJS');
                 emulatorDiv.innerHTML = '<div class="status-message">❌ 加载失败，请刷新页面重试</div>';
-                // 如果加载失败，移除脚本标签以便重试
                 const failedScript = document.getElementById('ejs-loader');
                 if (failedScript) failedScript.remove();
             };
             document.head.appendChild(script);
         }
         
+        // 停止游戏函数
+        function stopGame() {
+            console.log('停止当前游戏...');
+            
+            const loaderScript = document.getElementById('ejs-loader');
+            if (loaderScript) {
+                loaderScript.remove();
+            }
+            
+            emulatorDiv.innerHTML = '';
+            
+            delete window.EJS_core;
+            delete window.EJS_gameUrl;
+            delete window.EJS_player;
+            delete window.EJS_pathtodata;
+            delete window.EJS_startOnLoaded;
+            delete window.EJS_fullscreen;
+            
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => iframe.remove());
+            
+            console.log('游戏已停止');
+        }
+        
         // 绑定按钮事件
         loadBtn.addEventListener('click', loadGame);
+        
+        // 切换游戏按钮：刷新整个页面
+        switchGameBtn.addEventListener('click', function() {
+            if (confirm('确定要刷新页面切换游戏吗？')) {
+                window.location.reload();
+            }
+        });
         
         // 移动端检测
         function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
         }
         
-        // 显示移动端提示
         if (isMobile()) {
             mobileWarning.style.display = 'block';
         }
         
-        // 监听屏幕方向变化
         window.addEventListener('resize', () => {
             if (isMobile()) {
                 mobileWarning.style.display = 'block';
