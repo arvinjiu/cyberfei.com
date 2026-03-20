@@ -64,7 +64,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 80px 20px 40px; /* 顶部留白给导航栏 */
+            padding: 20px;
         }
 
         .glitch {
@@ -144,10 +144,10 @@
             margin-bottom: 40px;
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             display: flex;
-            align-items: center;
-            height: 340px;
+            align-items: flex-start;
+            min-height: 200px;
         }
 
         .info-panel::before {
@@ -175,16 +175,19 @@
             animation: content-glow 3s ease-in-out infinite;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 30px;
+            width: 100%;
         }
 
         .info-avatar {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 15px;
             border: 3px solid var(--cyan);
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
             flex-shrink: 0;
+            object-fit: cover;
             animation: avatar-glow 3s ease-in-out infinite;
         }
 
@@ -195,6 +198,21 @@
 
         .info-text {
             flex: 1;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--cyan);
+            overflow: hidden;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .typing-effect {
+            border-right: 2px solid var(--cyan);
+            animation: blink-cursor 0.7s infinite;
+        }
+
+        @keyframes blink-cursor {
+            0%, 50% { border-right-color: var(--cyan); }
+            51%, 100% { border-right-color: transparent; }
         }
 
         /* Life Section */
@@ -354,7 +372,7 @@
 
         /* 横向导航菜单 */
         .nav-menu {
-            position: fixed;
+            position: relative;
             top: 0;
             left: 0;
             right: 0;
@@ -371,9 +389,8 @@
             padding: 10px 30px;
             z-index: 1000;
             box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            margin-bottom: 40px;
         }
-
-   
 
         .nav-menu.active {
             transform: translateY(0);
@@ -421,6 +438,15 @@
         }
 
         .nav-link:hover::before {
+            width: 80%;
+        }
+
+        .nav-link.active {
+            color: var(--magenta);
+            text-shadow: 0 0 10px var(--magenta);
+        }
+
+        .nav-link.active::before {
             width: 80%;
         }
 
@@ -628,7 +654,7 @@
 <body>
     <!-- 横向导航菜单 -->
     <nav class="nav-menu" id="navMenu">
-        <a href="#" class="nav-link">HOME</a>
+        <a href="#" class="nav-link active">HOME</a>
         <a href="#" class="nav-link">PROJECTS</a>
         <a href="#" class="nav-link">LIFE</a>
         <a href="/gaming.html" class="nav-link">GAMING</a>
@@ -658,11 +684,7 @@
         <div class="info-panel">
             <div class="info-content">
                 <img src="avatar.svg" alt="Avatar" class="info-avatar">
-                <div class="info-text">Welcome to cyberfei.com! 👋
-
-I'm a chubby guy with a big passion for hardware, software, and product design. This is my little corner of the internet where I share the projects I'm tinkering with—from code experiments to gadget builds—and snippets of everyday life. Whether you're here to check out my latest creations or just curious about what I'm up to, make yourself at home. Explore, get inspired, and feel free to reach out!
-
-Happy browsing! 🚀</div>
+                <div class="info-text typing-effect" id="info-text"></div>
             </div>
         </div>
 
@@ -685,6 +707,25 @@ Happy browsing! 🚀</div>
             </div>
         </div>
 
+        <div class="projects-section">
+            <h2 class="section-title">🚀 PROJECTS</h2>
+            <a href="/lloyd/" class="project-link">
+                👶 Lloyd | 我们的宝贝
+            </a>
+            <a href="/love.html" class="project-link">
+                💕 土味情话游戏 | ROMANTIC GAME
+            </a>
+            <a href="/gaming.html" class="project-link">
+                🎮 复古游戏机 | GAMING
+            </a>
+            <a href="#" class="project-link">
+                📊 个人博客 | BLOG (COMING SOON)
+            </a>
+            <a href="#" class="project-link">
+                🎵 音乐收藏 | MUSIC (COMING SOON)
+            </a>
+        </div>
+
         <div class="life-section">
             <h2 class="section-title">🌍 LIFE</h2>
             <div class="life-card">
@@ -705,25 +746,6 @@ Weighing in at a solid twelve pounds, Erbing is gloriously, unapologetically fat
                 </div>
             </div>
         </div>
-
-        <div class="projects-section">
-            <h2 class="section-title">🚀 PROJECTS</h2>
-            <a href="/lloyd/" class="project-link">
-                👶 Lloyd | 我们的宝贝
-            </a>
-            <a href="/love.html" class="project-link">
-                💕 土味情话游戏 | ROMANTIC GAME
-            </a>
-            <a href="/gaming.html" class="project-link">
-                🎮 复古游戏机 | GAMING
-            </a>
-            <a href="#" class="project-link">
-                📊 个人博客 | BLOG (COMING SOON)
-            </a>
-            <a href="#" class="project-link">
-                🎵 音乐收藏 | MUSIC (COMING SOON)
-            </a>
-        </div>
     </div>
 
     <footer class="footer">
@@ -741,9 +763,37 @@ Weighing in at a solid twelve pounds, Erbing is gloriously, unapologetically fat
                 <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.053.036.14.042.193.016.097.031.193.047.29.031.164.062.327.093.49.13.685.26 1.37.39 2.054.046.24.09.48.135.72.035.19.07.38.105.57.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.03.155.06.31.09.465.0
 
     <script>
+        // 打字效果
+        const fullText = `Welcome to cyberfei.com! 👋
+
+I'm a chubby guy with a big passion for hardware, software, and product design. This is my little corner of the internet where I share the projects I'm tinkering with—from code experiments to gadget builds—and snippets of everyday life. Whether you're here to check out my latest creations or just curious about what I'm up to, make yourself at home. Explore, get inspired, and feel free to reach out!
+
+Happy browsing! 🚀`;
+
+        function typeWriter(elementId, text, speed = 30) {
+            const element = document.getElementById(elementId);
+            let i = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
         // 确保 DOM 加载完成
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM 加载完成，初始化时间显示');
+            
+            // 启动打字效果
+            const infoText = document.getElementById('info-text');
+            if (infoText) {
+                typeWriter('info-text', fullText, 20);
+            }
             
             // 更新时间、时区和 IP 位置
             let locationCache = '未知地区';

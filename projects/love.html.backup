@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>土味情话游戏 - 飞飞❤️露露</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { 
+            --primary: #00d4ff; 
+            --secondary: #a855f7; 
+            --bg: #0a0a0f; 
+            --card: rgba(20, 20, 35, 0.9); 
+            --text: #e0e0e0; 
+            --accent: #06b6d4;
+            --glow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+        body { 
+            font-family: 'Courier New', 'Fira Code', monospace; 
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%); 
+            color: var(--text); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 10px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        /* 星空背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 230px 80px, #fff, transparent);
+            background-size: 350px 350px;
+            animation: stars 20s linear infinite;
+            opacity: 0.6;
+            z-index: -1;
+        }
+        @keyframes stars {
+            from { transform: translateY(0); }
+            to { transform: translateY(-350px); }
+        }
+        /* 扫描线效果 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 999;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .header-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            text-shadow: var(--glow);
+            animation: flicker 3s ease-in-out infinite;
+            letter-spacing: 2px;
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+            52% { opacity: 0.3; }
+            54% { opacity: 1; }
+        }
+        
+        @keyframes float { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-5px); } 
+        }
+        .header img {
+            width: 100%;
+            max-width: 400px;
+            max-height: 200px;
+            height: auto;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            object-fit: cover;
+            filter: contrast(1.1) saturate(1.2);
+        }
+        .game-container { 
+            background: var(--card); 
+            border: 1px solid var(--primary);
+            border-radius: 10px; 
+            padding: 15px; 
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            max-width: 450px; 
+            width: 100%; 
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* 照片弹窗样式 */
+        .photo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+        .photo-modal.show { display: flex; }
+
+        /* 得分弹窗样式 */
+        .score-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 2500;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+        .score-modal.show { display: flex; }
+        .score-content {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+            text-align: center;
+            animation: popIn 0.5s;
+            max-width: 90%;
+            width: 350px;
+            backdrop-filter: blur(10px);
+        }
+        .score-content h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-shadow: var(--glow);
+        }
+        .score-content .final-score {
+            font-size: 3rem;
+            color: var(--primary);
+            font-weight: bold;
+            margin: 20px 0;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .confirm-btn {
+            margin-top: 20px;
+            padding: 12px 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #0a0a0f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-family: inherit;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+        .confirm-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .photo-content {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+            text-align: center;
+            animation: popIn 0.5s;
+            backdrop-filter: blur(10px);
+        }
+        .photo-content img {
+            max-width: 90vw;
+            max-height: 70vh;
+            border-radius: 10px;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+        }
+        .photo-content p {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 15px;
+            font-weight: bold;
+            text-shadow: var(--glow);
+        }
+        .close-photo {
+            margin-top: 15px;
+            padding: 10px 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #0a0a0f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: inherit;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+        .score-board { 
+            display: flex; 
+            justify-content: space-around; 
+            margin-bottom: 15px; 
+            padding: 10px; 
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(168, 85, 247, 0.2)); 
+            border: 1px solid var(--primary);
+            border-radius: 5px; 
+            color: var(--primary);
+            box-shadow: inset 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+        .score-item { text-align: center; }
+        .score-label { font-size: 0.75rem; opacity: 0.9; }
+        .score-value { font-size: 1.2rem; font-weight: bold; }
+        .question-text { 
+            font-size: 1.1rem; 
+            color: var(--primary); 
+            margin: 20px 0 15px; 
+            line-height: 1.4;
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        .options { display: grid; gap: 10px; }
+        .option-btn { 
+            padding: 12px 15px; 
+            border: 2px solid var(--primary); 
+            background: rgba(0, 212, 255, 0.05); 
+            color: var(--text); 
+            border-radius: 5px; 
+            font-size: 0.9rem; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-appearance: none;
+            font-family: inherit;
+        }
+        .option-btn:hover { 
+            background: var(--primary); 
+            color: #0a0a0f;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+        }
+        .option-btn:focus { 
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+        .option-btn:active { 
+            transform: scale(0.98); 
+            background: var(--primary);
+            color: white;
+        }
+        .option-btn.correct { 
+            background: #2ed573 !important; 
+            border-color: #2ed573 !important; 
+            color: white !important;
+        }
+        .option-btn.wrong { 
+            background: #ff4757 !important; 
+            border-color: #ff4757 !important; 
+            color: white !important;
+        }
+        .feedback { margin-top: 15px; padding: 10px; border-radius: 10px; display: none; font-size: 0.9rem; }
+        .next-btn { 
+            margin-top: 20px; 
+            padding: 12px 30px; 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color: #0a0a0f; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            display: none;
+            transition: all 0.3s;
+            font-family: inherit;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+        .next-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.8);
+        }
+        .emoji-rain { position: fixed; top: 0; left: 0; right: 0; pointer-events: none; z-index: 1000; }
+        .emoji { position: absolute; font-size: 1.5rem; animation: fall 3s linear; filter: drop-shadow(0 0 5px var(--primary)); }
+        @keyframes fall { from { transform: translateY(-100vh); } to { transform: translateY(100vh); } }
+        
+        /* 照片轮播样式 */
+        .photo-carousel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .carousel-title {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+        .carousel-container {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+            text-align: center;
+            max-width: 90%;
+            width: 500px;
+            backdrop-filter: blur(10px);
+        }
+        .carousel-container img {
+            max-width: 250px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: opacity 0.5s;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+            object-fit: cover;
+        }
+        .carousel-text h2 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            text-shadow: var(--glow);
+        }
+        .carousel-text p {
+            color: var(--text);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">💕 土味情话游戏</div>
+        <a href="/" class="home-btn" style="display:inline-block; padding:10px 20px; background:linear-gradient(45deg, var(--primary), var(--secondary)); color:white; text-decoration:none; border-radius:8px; margin-bottom:20px;">← 返回首页</a>
+    </div>
+
+    <!-- 游戏板块 -->
+    <div class="game-container">
+        <div class="score-board">
+            <div class="score-item"><div class="score-label">💝 得分</div><div class="score-value" id="score">0</div></div>
+            <div class="score-item"><div class="score-label">🎯 进度</div><div class="score-value"><span id="current">1</span>/<span id="total">10</span></div></div>
+        </div>
+
+        <div class="question-text" id="question">加载中...</div>
+        <div class="options" id="options"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">下一题 ➡️</button>
+    </div>
+
+    <div class="emoji-rain" id="emoji-rain"></div>
+
+    <!-- 照片弹窗 -->
+    <div class="photo-modal" id="photo-modal">
+        <div class="photo-content">
+            <img id="photo-img" src="" alt="照片">
+            <p id="photo-caption"></p>
+            <button class="close-photo" onclick="closePhoto()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 得分弹窗 -->
+    <div class="score-modal" id="score-modal">
+        <div class="score-content">
+            <h2>🎉 Liufei's CyberWorld</h2>
+            <p>你的得分是:</p>
+            <div class="final-score" id="final-score">0</div>
+            <button class="confirm-btn" onclick="confirmScore()">确认</button>
+            <button class="confirm-btn" onclick="downloadPage()" style="background: linear-gradient(135deg, #4ecdc4, #44a08d); margin-left: 10px;">📥 下载网页</button>
+        </div>
+    </div>
+
+    <script>
+        // 删除 showSection 函数，不再需要
+        
+        const questions = [
+            { question: "你知道我的心跳为什么这么快吗？", options: ["因为运动了", "因为见到你", "因为紧张", "因为生病了"], correct: 1, hint: "因为你呀，就像小鹿乱撞～💕" },
+            { question: "如果我是厨师，那你是什么？", options: ["顾客", "助手", "我的菜", "食材"], correct: 2, hint: "你是我的菜，这辈子就爱吃你这道菜～🍲" },
+            { question: "你知道我最喜欢什么神吗？", options: ["雷神", "爱神", "你的眼神", "财神"], correct: 2, hint: "你的眼神，每次看我都让我心动～👀" },
+            { question: "你知道你和星星的区别吗？", options: ["星星在天上", "星星会发光", "星星很远", "星星不够亮"], correct: 0, hint: "星星在天上，而你在我心上～✨" },
+            { question: "你知道我为什么总是睡不着吗？", options: ["因为失眠", "因为想你", "因为太累", "因为太兴奋"], correct: 1, hint: "因为想你，想得连梦都是你～🌙" }
+        ];
+
+        let currentQuestion = 0, score = 0, answered = false;
+
+        function initGame() { currentQuestion = 0; score = 0; updateScore(); showQuestion(); }
+        function showQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('current').textContent = currentQuestion + 1;
+            document.getElementById('total').textContent = questions.length;
+            
+            // 重新生成按钮，确保没有残留的类名
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.style.pointerEvents = 'auto'; // 确保可点击
+                btn.onclick = () => checkAnswer(i);
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('feedback').style.background = '';
+            document.getElementById('feedback').style.color = '';
+            document.getElementById('next-btn').style.display = 'none';
+        }
+        function checkAnswer(index) {
+            if (answered) return;
+            const q = questions[currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            // 禁用所有按钮
+            buttons.forEach(btn => btn.style.pointerEvents = 'none');
+            
+            buttons[index].classList.add(index === q.correct ? 'correct' : 'wrong');
+            
+            // 如果答错，标出正确答案
+            if (index !== q.correct) {
+                buttons[q.correct].classList.add('correct');
+                showFeedback(false, q.hint + ' 正确答案已标绿～');
+            } else {
+                // 答对
+                score += 20;
+                updateScore();
+                showFeedback(true, q.hint);
+                createEmojiRain();
+            }
+            
+            answered = true;
+            document.getElementById('next-btn').style.display = 'inline-block';
+        }
+        function showFeedback(isCorrect, hint) {
+            const fb = document.getElementById('feedback');
+            fb.innerHTML = isCorrect ? `✅ 答对了！${hint}` : `❌ 答错了～${hint}`;
+            fb.style.display = 'block';
+            fb.style.background = isCorrect ? '#d4edda' : '#f8d7da';
+            fb.style.color = isCorrect ? '#155724' : '#721c24';
+            
+            // 弹出照片
+            if (isCorrect) {
+                showPhoto('./photos/photo-new.jpg', '答对啦～💕');
+            } else {
+                showPhoto('./photos/photo-wrong.jpg', '答错啦～😅');
+            }
+        }
+        
+        function showPhoto(src, caption) {
+            document.getElementById('photo-img').src = src;
+            document.getElementById('photo-caption').textContent = caption;
+            document.getElementById('photo-modal').classList.add('show');
+        }
+        
+        function closePhoto() {
+            document.getElementById('photo-modal').classList.remove('show');
+        }
+        function updateScore() { document.getElementById('score').textContent = score; }
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                // 游戏结束，显示得分弹窗
+                showScoreModal();
+            }
+        }
+
+        function showScoreModal() {
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('score-modal').classList.add('show');
+        }
+
+        function confirmScore() {
+            document.getElementById('score-modal').classList.remove('show');
+            showPhotoCarousel();
+        }
+
+        function downloadPage() {
+            // 下载当前页面
+            const pageContent = document.documentElement.outerHTML;
+            const blob = new Blob([pageContent], { type: 'text/html' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'love-game.html';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+        
+        function showPhotoCarousel() {
+            // 隐藏游戏容器
+            document.getElementById('game-container').style.display = 'none';
+            
+            // 显示轮播页面
+            const carousel = document.createElement('div');
+            carousel.className = 'photo-carousel';
+            carousel.id = 'photo-carousel';
+            carousel.innerHTML = `
+                <div class="carousel-title">Liufei's CyberWorld</div>
+                <div class="carousel-container">
+                    <img id="carousel-img" src="./photos/ending1.jpg" alt="美好回忆">
+                    <div class="carousel-text">
+                        <h2>最终得分：${score}/100</h2>
+                        <p>${score === 100 ? '🎉 完美！' : '💕 继续加油！'}</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(carousel);
+            
+            // 自动轮播
+            let imgIndex = 0;
+            const images = ['./photos/ending1.jpg', './photos/ending2.jpg', './photos/ending3.jpg', './photos/ending4.jpg'];
+            const imgElement = document.getElementById('carousel-img');
+            
+            setInterval(() => {
+                imgIndex = (imgIndex + 1) % images.length;
+                imgElement.style.opacity = '0';
+                setTimeout(() => {
+                    imgElement.src = images[imgIndex];
+                    imgElement.style.opacity = '1';
+                }, 500);
+            }, 3000);
+        }
+        function createEmojiRain() {
+            const emojis = ['💕','💖','💗','💓','💞','💘','💝'];
+            for (let i = 0; i < 20; i++) {
+                const e = document.createElement('div');
+                e.className = 'emoji';
+                e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                e.style.left = Math.random() * 100 + '%';
+                e.style.animationDuration = (2 + Math.random() * 2) + 's';
+                document.getElementById('emoji-rain').appendChild(e);
+                setTimeout(() => e.remove(), 4000);
+            }
+        }
+        initGame();
+    </script>
+
+    <!-- 联系方式图标 + 版权 -->
+    <div style="margin-top: 40px; padding: 20px; text-align: center; border-top: 1px solid rgba(0, 212, 255, 0.3);">
+        <!-- 社交图标栏 -->
+        <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; flex-wrap: wrap;">
+            <!-- 邮箱 -->
+            <a href="mailto:your@email.com" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(0, 212, 255, 0.1); border: 1px solid var(--primary); border-radius: 8px; transition: all 0.3s; box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);" onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 0 20px rgba(0, 212, 255, 0.6)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 10px rgba(0, 212, 255, 0.3)'">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--primary)"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+            <!-- YouTube -->
+            <a href="https://youtube.com" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(255, 0, 0, 0.1); border: 1px solid #ff0000; border-radius: 8px; transition: all 0.3s; box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);" onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 0 20px rgba(255, 0, 0, 0.6)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 10px rgba(255, 0, 0, 0.3)'">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+            <!-- Twitter/X -->
+            <a href="https://twitter.com" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(29, 161, 242, 0.1); border: 1px solid #1da1f2; border-radius: 8px; transition: all 0.3s; box-shadow: 0 0 10px rgba(29, 161, 242, 0.3);" onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 0 20px rgba(29, 161, 242, 0.6)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 10px rgba(29, 161, 242, 0.3)'">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="#1da1f2"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <!-- Telegram -->
+            <a href="https://t.me/yourusername" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(0, 136, 204, 0.1); border: 1px solid #0088cc; border-radius: 8px; transition: all 0.3s; box-shadow: 0 0 10px rgba(0, 136, 204, 0.3);" onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 0 20px rgba(0, 136, 204, 0.6)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 10px rgba(0, 136, 204, 0.3)'">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.156c-.18 1.828-1.04 6.761-1.488 9.168-.189.983-.95 1.302-1.859.943-.628-.246-1.588-.838-2.385-1.248-.964-.494-1.695-.798-1.695-.798s.714-.403 1.162-.632c.64-.322 1.088-.495 1.526-.888.358-.322.488-.734.488-1.162 0-.428-.229-.856-.677-1.162-.448-.306-1.296-.592-2.144-.888-.948-.328-1.896-.656-2.544-.984-.848-.428-1.526-1.06-1.526-1.896 0-.656.448-1.162 1.162-1.488.714-.328 1.612-.428 2.544-.428.932 0 1.83.148 2.544.428.714.28 1.162.734 1.162 1.488 0 .756-.448 1.422-1.162 1.928-.714.506-1.612.834-2.544 1.162-.932.328-1.83.656-2.544.984-.714.328-1.162.734-1.162 1.488 0 .756.448 1.302 1.162 1.63.714.328 1.612.656 2.544.984.932.328 1.83.656 2.544.984.714.328 1.162.734 1.162 1.488 0 .756-.448 1.302-1.162 1.63-.714.328-1.612.656-2.544.984-.932.328-1.83.656-2.544.984-.714.328-1.162.734-1.162 1.488 0 .756.448 1.302 1.162 1.63.714.328 1.612.656 2.544.984.932.328 1.83.656 2.544.984.714.328 1.162.734 1.162 1.488 0 .756-.448 1.302-1.162 1.63-.714.328-1.612.656-2.544.984-.932.328-1.83.656-2.544.984-.714.328-1.162.734-1.162 1.488 0 .756.448 1.302 1.162 1.63.714.328 1.612.656 2.544.984.932.328 1.83.656 2.544.984.714.328 1.162.734 1.162 1.488 0 .756-.448 1.302-1.162 1.63-.714.328-1.612.656-2.544.984-.932.328-1.83.656-2.544.984-.714.328-1.162.734-1.162 1.488 0 .756.448 1.302 1.162 1.63.714.328 1.612.656 2.544.984.932.328 1.83.656 2.544.984.714.328 1.162.734 1.162 1.488 0 .756-.448 1.302-1.162 1.63-.714.328-1.612.656-2.544.984-.932.328-1.83.656-2.544.984-.714.328-1.162.734-1.162 1.488 0 .756.448 1.302 1.162 1.63.714.328 1.612.656 2.544.984.932.328 1.83.656 2.544.984.714.328 1.162.734 1.162 1.488 0 .756-.448 1.302-1.162 1.63-.714.328-1.612.656-2.544.984-.932.328-1.83.656-2.544.984-.714.328-1.162.734-1.162 1.488 0 .756.448 1.302 1.162 1.63.714.328 1.612.656 2.544.984.932.328 1.83.656 2.544.984.714.328 1.162.734 1.162 1.488 0 .756-.448 1.302-1.162 1.63-.714.328-1.612.656-2.54

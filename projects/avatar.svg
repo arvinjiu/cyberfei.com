@@ -1,0 +1,55 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+
+ <!-- 背景透明 -->
+
+ <!-- 外围柔和装饰 -->
+ <g opacity="0.4">
+ <circle cx="120" cy="120" r="6" fill="#A5B4FC"/>
+ <circle cx="400" cy="100" r="5" fill="#93C5FD"/>
+ <circle cx="420" cy="360" r="6" fill="#C4B5FD"/>
+ <circle cx="100" cy="380" r="5" fill="#99F6E4"/>
+ </g>
+
+ <!-- 中心脸 -->
+ <circle cx="256" cy="260" r="110" fill="#FDE68A"/>
+
+ <!-- 眼镜 -->
+ <circle cx="210" cy="260" r="30" stroke="#1F2937" stroke-width="6" fill="none"/>
+ <circle cx="302" cy="260" r="30" stroke="#1F2937" stroke-width="6" fill="none"/>
+ <line x1="240" y1="260" x2="272" y2="260" stroke="#1F2937" stroke-width="6"/>
+
+ <!-- 眼睛 -->
+ <circle cx="210" cy="260" r="6" fill="#1F2937"/>
+ <circle cx="302" cy="260" r="6" fill="#1F2937"/>
+
+ <!-- 微笑 -->
+ <path d="M210 310 Q256 350 302 310" stroke="#1F2937" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+ <!-- 腮红 -->
+ <circle cx="180" cy="300" r="10" fill="#FCA5A5" opacity="0.6"/>
+ <circle cx="332" cy="300" r="10" fill="#FCA5A5" opacity="0.6"/>
+
+ <!-- ========== 环绕图标 ========== -->
+
+ <!-- 芯片 -->
+ <rect x="80" y="220" width="40" height="40" rx="8" fill="#A5B4FC"/>
+ <line x1="80" y1="240" x2="60" y2="240" stroke="#A5B4FC" stroke-width="3"/>
+ <line x1="120" y1="240" x2="140" y2="240" stroke="#A5B4FC" stroke-width="3"/>
+
+ <!-- 代码 </>
+ -->
+ <text x="380" y="240" font-size="28" fill="#93C5FD" font-family="monospace">&lt;/&gt;</text>
+
+ <!-- 火箭 -->
+ <path d="M380 320 L400 280 L420 320 Z" fill="#FCA5A5"/>
+ <rect x="395" y="320" width="10" height="20" fill="#FDBA74"/>
+
+ <!-- 相机 -->
+ <rect x="90" y="320" width="50" height="30" rx="6" fill="#86EFAC"/>
+ <circle cx="115" cy="335" r="8" fill="#065F46"/>
+
+ <!-- 铅笔 + 尺子 -->
+ <rect x="360" y="120" width="40" height="8" transform="rotate(30 360 120)" fill="#FCD34D"/>
+ <rect x="380" y="110" width="40" height="8" transform="rotate(30 380 110)" fill="#93C5FD"/>
+
+</svg>
