@@ -742,43 +742,23 @@ Weighing in at a solid twelve pounds, Erbing is gloriously, unapologetically fat
 
     <script>
         // 更新时间、时区和 IP 位置
-        async function updateTime() {
-            // 获取访问者本地时间
-            const now = new Date();
-            const timeString = now.toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            }).replace(/\//g, '-');
-            
-            // 获取访问者时区
-            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            
-            // 获取 IP 位置（使用免费 API）
-            let location = '未知地区';
+        let locationCache = '未知地区';
+        
+        async function fetchLocation() {
             try {
                 const response = await fetch('https://ipapi.co/json/');
                 const data = await response.json();
                 if (data.country_name && data.city) {
-                    location = `${data.country_name} - ${data.city}`;
+                    locationCache = `${data.country_name} - ${data.city}`;
                 } else if (data.country_name) {
-                    location = data.country_name;
+                    locationCache = data.country_name;
                 }
             } catch (error) {
                 console.log('无法获取 IP 位置:', error);
             }
-            
-            document.getElementById('time').innerHTML = `${timeString} | 🕐 ${timeZone} | 📍 ${location}`;
         }
         
-        // 初始化时调用一次
-        updateTime();
-        // 每秒更新时间（IP 位置只获取一次，后续只更新时间）
-        setInterval(() => {
+        function updateTime() {
             const now = new Date();
             const timeString = now.toLocaleString('zh-CN', {
                 year: 'numeric',
@@ -789,10 +769,16 @@ Weighing in at a solid twelve pounds, Erbing is gloriously, unapologetically fat
                 second: '2-digit',
                 hour12: false
             }).replace(/\//g, '-');
+            
             const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            const currentLocation = document.getElementById('time').textContent.split(' | 📍 ')[1] || '未知地区';
-            document.getElementById('time').innerHTML = `${timeString} | 🕐 ${timeZone} | 📍 ${currentLocation}`;
-        }, 1000);
+            document.getElementById('time').innerHTML = `${timeString} | 🕐 ${timeZone} | 📍 ${locationCache}`;
+        }
+        
+        // 初始化：先显示默认，再获取 IP 位置
+        updateTime();
+        fetchLocation();
+        // 每秒更新
+        setInterval(updateTime, 1000);
 
         // 导航菜单 - 固定在顶部常显
         console.log('Nav menu: Fixed at top, always visible');
