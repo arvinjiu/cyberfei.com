@@ -389,7 +389,14 @@
             padding: 10px 30px;
             z-index: 1000;
             box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-            margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu.fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
         }
 
         .nav-menu.active {
@@ -840,6 +847,43 @@ Happy browsing! 🚀`;
             fetchLocation();
             // 每秒更新
             setInterval(updateTime, 1000);
+            
+            // 滚动监听 - 导航栏固定 + 高亮
+            const navMenu = document.getElementById('navMenu');
+            const projectsSection = document.querySelector('.projects-section');
+            const lifeSection = document.querySelector('.life-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            window.addEventListener('scroll', function() {
+                const scrollY = window.scrollY;
+                const navHeight = navMenu.offsetHeight;
+                
+                // 初始状态：导航栏可滚动，HOME 高亮
+                if (scrollY < navHeight + 50) {
+                    navMenu.classList.remove('fixed');
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    navLinks[0].classList.add('active'); // HOME 高亮
+                    return;
+                }
+                
+                // 滚动超过一定距离后固定导航栏
+                navMenu.classList.add('fixed');
+                
+                // 判断滚动位置，切换高亮
+                if (lifeSection && scrollY >= lifeSection.offsetTop - navHeight - 50) {
+                    // Life 高亮
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    navLinks[2].classList.add('active'); // LIFE 高亮
+                } else if (projectsSection && scrollY >= projectsSection.offsetTop - navHeight - 50) {
+                    // Projects 高亮
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    navLinks[1].classList.add('active'); // PROJECTS 高亮
+                } else {
+                    // HOME 高亮
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    navLinks[0].classList.add('active');
+                }
+            });
         });
 
         // 导航菜单 - 固定在顶部常显
