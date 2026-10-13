@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# EmulatorJS (managed on NAS, not in git)
+emulatorjs/
+
+# Backup files
+*.backup
+*.backup-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.local
