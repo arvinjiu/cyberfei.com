@@ -1,0 +1,84 @@
+/* ============================================================
+   导航栏样式 - 独立版
+   供独立主题页面（如 lloyd）使用，不含赛博主题背景
+   ============================================================ */
+
+:root {
+  --cyan: #00d4ff;
+  --magenta: #a855f7;
+  --glass: rgba(255, 255, 255, 0.05);
+  --black: #0a0a0f;
+}
+
+.nav-menu {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  min-height: 60px;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--cyan);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 30px;
+  z-index: 1000;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+  margin: -20px -20px 20px; /* 抵消 lloyd body padding */
+}
+
+.nav-link {
+  color: var(--cyan);
+  text-decoration: none;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 4px 8px;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--magenta);
+  text-shadow: 0 0 10px var(--magenta);
+}
+
+.nav-link:hover::before,
+.nav-link.active::before {
+  width: 80%;
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    justify-content: center;
+    padding: 8px 15px;
+    gap: 8px;
+  }
+  .nav-link {
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link, .nav-link::before {
+    transition-duration: 0.01ms !important;
+  }
+}
