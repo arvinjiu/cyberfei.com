@@ -1,6 +1,8 @@
 /* ============================================================
    Liufei's Cyber World - Common Styles
-   共享样式：所有页面统一引入
+   共享样式：index / gaming / love 引入
+   说明：星空与扫描线背景仅在 <body class="cyber"> 时启用，
+        避免影响 lloyd 等独立主题页
    ============================================================ */
 
 /* ---------- Reset ---------- */
@@ -43,8 +45,45 @@ body {
   position: relative;
 }
 
-/* ---------- Global Background Layers ---------- */
-/* Grid background */
+/* ---------- Cyber Background Layers (仅 body.cyber) ---------- */
+body.cyber::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+    radial-gradient(2px 2px at 160px 120px, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 230px 80px, #fff, transparent);
+  background-size: 350px 350px;
+  animation: stars 20s linear infinite;
+  opacity: 0.6;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes stars {
+  from { transform: translateY(0); }
+  to { transform: translateY(-350px); }
+}
+
+body.cyber::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Grid background (index 首页) */
 .grid-bg {
   position: fixed;
   inset: 0;
@@ -74,28 +113,11 @@ body {
   pointer-events: none;
 }
 
-/* Scanlines overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.1) 1px,
-    transparent 1px,
-    transparent 2px
-  );
-  pointer-events: none;
-  z-index: 999;
-}
-
 /* ---------- Navigation ---------- */
 .nav-menu {
   position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   min-height: 60px;
   background: var(--glass);
   backdrop-filter: blur(10px);
@@ -108,7 +130,6 @@ body::after {
   padding: 10px 30px;
   z-index: 1000;
   box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-  transition: all 0.3s ease;
 }
 
 .nav-menu::before {
@@ -172,6 +193,7 @@ body::after {
   border-top: 1px solid var(--cyan);
   background: var(--glass);
   backdrop-filter: blur(10px);
+  width: 100%;
 }
 
 .social-links {
@@ -224,7 +246,6 @@ body::after {
   padding: 20px;
 }
 
-/* Back button (sub-pages) */
 .btn {
   display: inline-block;
   padding: 10px 20px;
@@ -247,7 +268,6 @@ body::after {
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   .nav-menu {
-    flex-wrap: wrap;
     justify-content: center;
     padding: 8px 15px;
     gap: 8px;
